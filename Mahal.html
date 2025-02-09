@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Image Carousel</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #000;
+            overflow: hidden;
+            position: relative;
+        }
+        .heart {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: url('heart.png') no-repeat center;
+            background-size: contain;
+            opacity: 0.7;
+            animation: float 5s linear infinite;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+        .carousel {
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .slide {
+            min-width: 100%;
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+        }
+        .controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+        .controls button {
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 300);
+    </script>
+    
+    <div class="carousel">
+        <div class="slides" id="slides">
+            <div class="slide" style="background-image: url('1st.png');"></div>
+            <div class="slide" style="background-image: url('2nd.png');"></div>
+            <div class="slide" style="background-image: url('3rd.png');"></div>
+            <div class="slide" style="background-image: url('4th.png');"></div>
+            <div class="slide" style="background-image: url('5th.png');"></div>
+            <div class="slide" style="background-image: url('6th.png');"></div>
+            <div class="slide" style="background-image: url('7th.png');"></div>
+            <div class="slide" style="background-image: url('8th.png');"></div>
+            <div class="slide" style="background-image: url('9th.png');"></div>
+            <div class="slide" style="background-image: url('10th.png');"></div>
+        </div>
+        <div class="controls">
+            <button onclick="prevSlide()">&#10094;</button>
+            <button onclick="nextSlide()">&#10095;</button>
+        </div>
+    </div>
+    
+    <script>
+        let index = 0;
+        const slides = document.getElementById('slides');
+        const totalSlides = document.querySelectorAll('.slide').length;
+
+        function showSlide(i) {
+            index = (i + totalSlides) % totalSlides;
+            slides.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        function nextSlide() {
+            showSlide(index + 1);
+        }
+
+        function prevSlide() {
+            showSlide(index - 1);
+        }
+
+        let startX;
+        document.querySelector('.carousel').addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        document.querySelector('.carousel').addEventListener('touchend', (e) => {
+            let endX = e.changedTouches[0].clientX;
+            if (startX > endX + 50) nextSlide();
+            else if (startX < endX - 50) prevSlide();
+        });
+    </script>
+</body>
+</html>
